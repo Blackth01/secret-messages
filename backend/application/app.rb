@@ -4,7 +4,7 @@ require 'json'
 
 require_relative 'utils/crypt_manager'
 
-redis = Redis.new(host: 'redis', port: 6379)
+redis = Redis.new(host: 'redis', port: ENV.fetch('REDIS_PORT', 6379))
 crypt_manager = CryptManager.new
 
 get '/' do
@@ -85,4 +85,4 @@ patch '/retrieve' do
   end
 end
 
-set :port, 3000
+set :port, ENV['SINATRA_PORT']

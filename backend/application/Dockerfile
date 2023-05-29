@@ -16,8 +16,5 @@ RUN bundle install
 # Copy the application code to the container
 COPY . .
 
-# Expose the port on which the Sinatra application will run
-EXPOSE 3000
-
 # Start the Sinatra application
 CMD ["ruby", "app.rb", "-o", "0.0.0.0"]
