@@ -9,12 +9,12 @@ crypt_manager = CryptManager.new
 
 before do
   headers 'Access-Control-Allow-Origin' => '*',
-          'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
           'Access-Control-Allow-Headers' => 'Authorization, Content-Type'
 end
 
 options '*' do
-  response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
+  response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS, PATCH'
   response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, Origin'
   response.headers['Access-Control-Allow-Origin'] = '*'
   200
