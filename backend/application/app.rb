@@ -7,6 +7,19 @@ require_relative 'utils/crypt_manager'
 redis = Redis.new(host: 'redis', port: ENV.fetch('REDIS_PORT', 6379))
 crypt_manager = CryptManager.new
 
+before do
+  headers 'Access-Control-Allow-Origin' => '*',
+          'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers' => 'Authorization, Content-Type'
+end
+
+options '*' do
+  response.headers['Allow'] = 'GET, POST, PUT, DELETE, OPTIONS'
+  response.headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, Accept, Origin'
+  response.headers['Access-Control-Allow-Origin'] = '*'
+  200
+end
+
 get '/' do
   "<h1>Yeah, it's apparently working, my friend! xD :) :p =)</h1>"
 end
