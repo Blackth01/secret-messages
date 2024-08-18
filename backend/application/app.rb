@@ -20,9 +20,13 @@ options '*' do
   200
 end
 
+
+
 get '/' do
   "<h1>Yeah, it's apparently working, my friend! xD :) :p =)</h1>"
 end
+
+
 
 post '/store' do
   request.body.rewind
@@ -57,6 +61,8 @@ post '/store' do
   
   { key: key }.to_json
 end
+
+
 
 patch '/retrieve' do
   request.body.rewind
