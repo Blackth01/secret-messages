@@ -7,7 +7,6 @@ require_relative 'utils/crypt_manager'
 
 class SecretMessages < Sinatra::Base
 
-  set :port, ENV['SINATRA_PORT']
   use Rack::RewindableInput::Middleware
 
   def initialize
@@ -60,13 +59,33 @@ class SecretMessages < Sinatra::Base
       halt 400, {message: 'The message or the password can\'t be empty!'}.to_json
     end
 
+    if data.key?("expiration")
+      expiration_in_seconds = data["expiration"]
+
+      if !expiration_in_seconds.is_a? Integer
+        begin
+          expiration_in_seconds = Integer(expiration_in_seconds)
+        rescue ArgumentError => e
+          halt 400, {message: 'The expiration in seconds should be a number!'}.to_json
+        end
+      end
+
+      if expiration_in_seconds < 0
+        halt 400, {message: "The expiration in seconds should be more than 0!"}.to_json
+      end
+    end
+
     key = SecureRandom.hex(16)
 
     aes_key = @crypt_manager.derive_aes_key(password, key)
 
     message = @crypt_manager.encrypt(message, aes_key)
 
-    @redis.set(key, message)
+    if expiration_in_seconds > 0
+      @redis.set(key, message, :ex => expiration_in_seconds)
+    else
+      @redis.set(key, message)
+    end
 
     { key: key }.to_json
   end
@@ -97,7 +116,7 @@ class SecretMessages < Sinatra::Base
     if !message
       status 404
 
-      { message: "Sorry, the message wasn't found!" }.to_json
+      { message: "Sorry, the message wasn't found! It either expired or was already read" }.to_json
     else
       aes_key = @crypt_manager.derive_aes_key(password, key)
 
