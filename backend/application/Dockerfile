@@ -16,5 +16,7 @@ RUN bundle install
 # Copy the application code to the container
 COPY . .
 
+RUN chmod +x entrypoint.sh
+
 # Start the Sinatra application
-CMD ["ruby", "app.rb", "-o", "0.0.0.0"]
+CMD ["./entrypoint.sh"]
