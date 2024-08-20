@@ -1,3 +1,3 @@
-require './app'
+require './src/app'
 
 run SecretMessages
